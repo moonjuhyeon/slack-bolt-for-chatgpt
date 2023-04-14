@@ -28,7 +28,7 @@ async def handle_mention(event, say):
     result = await say(text=response)
     # 이 스레드의 ts 값을 저장합니다.
     thread_ts = result["ts"]
-    threads[thread_ts] = {"channel": event["channel"], "messages": []}
+    threads[thread_ts] = {"channel": event["channel"], "messages": [], "isBot": True}
     # 대화 스레드를 삭제하기 위한 타이머를 시작합니다.
     loop = asyncio.get_event_loop()
     loop.run_in_executor(None, Timer, THREAD_TIMEOUT_SECONDS, remove_thread, [thread_ts])
@@ -45,9 +45,9 @@ async def handle_message(event, say):
         thread_ts = threads.get(event["ts"])
     if thread_ts is None:
         return
+
     # 이전에 시작된 스레드가 삭제된 경우 처리합니다.
     if thread_ts not in threads:
-        await say(text="이미 종료된 스레드입니다.", channel=event["channel"], thread_ts=thread_ts)
         return
 
     # 이전에 시작된 스레드에 대한 응답 메시지를 작성합니다.
