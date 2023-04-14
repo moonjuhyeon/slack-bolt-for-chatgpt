@@ -23,7 +23,8 @@ async def remove_thread(ts):
 @app.event("app_mention")
 async def handle_mention(event, say):
     # 새로운 스레드를 시작합니다.
-    response = "안녕하세요 무엇을 도와드릴까요?"
+    user_id = event["user"]
+    response = f"<@{user_id}>님 안녕하세요 무엇을 도와드릴까요?"
     result = await say(text=response)
     # 이 스레드의 ts 값을 저장합니다.
     thread_ts = result["ts"]
